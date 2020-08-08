@@ -34,7 +34,7 @@ static const uint32_t QIP5Height = 6666;
 static const uint32_t QIP6Height = 6666;
 static const uint32_t QIP7Height = 6666;
 static const uint32_t QIP9Height = 6666;
-static const uint64_t nOfflineStakeHeight = 150000;
+static const uint64_t nOfflineStakeHeight = 7000;
 static const uint32_t nPowTargetTimespan = 960;
 static const uint32_t nPowTargetTimespanV2 = 4000;
 static const uint32_t nPowTargetSpacing = 128;
@@ -54,8 +54,6 @@ static const uint32_t nFixUTXOCacheHFHeight = 7000;
 static const uint32_t nEnableHeaderSignatureHeight = 7000;
 /////////////////////////////////////////////////
 
-
-
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
     CMutableTransaction txNew;
@@ -65,7 +63,6 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
     txNew.vin[0].scriptSig = CScript() << 00 << 488804799 << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
     txNew.vout[0].nValue = genesisReward;
     txNew.vout[0].scriptPubKey = genesisOutputScript;
-
     CBlock genesis;
     genesis.nTime    = nTime;
     genesis.nBits    = nBits;
@@ -141,6 +138,19 @@ public:
         consensus.fPowAllowMinDifficultyBlocks = fPowAllowMinDifficultyBlocks;
         consensus.fPowNoRetargeting = fPowNoRetargeting;
         consensus.fPoSNoRetargeting = fPoSNoRetargeting;
+        fDefaultConsistencyChecks = false;
+        fRequireStandard = true;
+        fMineBlocksOnDemand = false;
+        m_is_test_chain = false;
+        consensus.nLastPOWBlock = nLastPOWBlock ;
+        consensus.nLastBigReward = nLastBigReward;
+        consensus.nMPoSRewardRecipients = nMPoSRewardRecipients;
+        consensus.nFirstMPoSBlock = consensus.nLastPOWBlock + consensus.nMPoSRewardRecipients + COINBASE_MATURITY;
+        consensus.nLastMPoSBlock = nLastMPoSBlock;
+        consensus.nFixUTXOCacheHFHeight = nFixUTXOCacheHFHeight;
+        consensus.nEnableHeaderSignatureHeight = nEnableHeaderSignatureHeight;
+        consensus.nCheckpointSpan = COINBASE_MATURITY;
+        consensus.delegationsAddress = uint160(ParseHex("0000000000000000000000000000000000000086")); // Delegations contract for offline staking
         consensus.nRuleChangeActivationThreshold = nRuleChangeActivationThreshold; // 95% of 2016
         consensus.nMinerConfirmationWindow = nMinerConfirmationWindow; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = bit;
@@ -183,33 +193,9 @@ public:
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,128);
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x88, 0xB2, 0x1E};
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x88, 0xAD, 0xE4};
-
         bech32_hrp = "cc";
-
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
 
-        fDefaultConsistencyChecks = false;
-        fRequireStandard = true;
-        fMineBlocksOnDemand = false;
-        m_is_test_chain = false;
-
-        chainTxData = ChainTxData{
-            // Data as of block 5c0215809068d3e8520997febc84ca578b4ddf3f8917a86b6c7f5e1deecb5c32 (height 499049)
-            1504695029, // * UNIX timestamp of last known number of transactions
-            0, // * total number of transactions between genesis and that timestamp
-            //   (the tx=... number in the SetBestChain debug.log lines)
-            0 // * estimated number of transactions per second after that timestamp
-        };
-
-        consensus.nLastPOWBlock = nLastPOWBlock ;
-        consensus.nLastBigReward = nLastBigReward;
-        consensus.nMPoSRewardRecipients = nMPoSRewardRecipients;
-        consensus.nFirstMPoSBlock = consensus.nLastPOWBlock + consensus.nMPoSRewardRecipients + COINBASE_MATURITY;
-        consensus.nLastMPoSBlock = nLastMPoSBlock;
-        consensus.nFixUTXOCacheHFHeight = nFixUTXOCacheHFHeight;
-        consensus.nEnableHeaderSignatureHeight = nEnableHeaderSignatureHeight;
-        consensus.nCheckpointSpan = COINBASE_MATURITY;
-        consensus.delegationsAddress = uint160(ParseHex("0000000000000000000000000000000000000086")); // Delegations contract for offline staking
     }
 };
 
@@ -219,6 +205,20 @@ public:
 class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
+        //////////////////////////////////CHECKPOINTS///////////////////////////
+        checkpointData = {
+            {
+            { 0, uint256S("000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c")},
+            }
+        };
+        /////////////////////////////////////////////////////////////////////////
+                  chainTxData = ChainTxData{
+            // Data as of block 5c0215809068d3e8520997febc84ca578b4ddf3f8917a86b6c7f5e1deecb5c32 (height 499049)
+            1504695029, // * UNIX timestamp of last known number of transactions
+            0, // * total number of transactions between genesis and that timestamp
+            //   (the tx=... number in the SetBestChain debug.log lines)
+            0 // * estimated number of transactions per second after that timestamp
+        };
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = nSubsidyHalvingInterval; // cico halving every 4 years
         consensus.BIP16Exception = uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c");
@@ -243,6 +243,19 @@ public:
         consensus.fPowAllowMinDifficultyBlocks = fPowAllowMinDifficultyBlocks;
         consensus.fPowNoRetargeting = fPowNoRetargeting;
         consensus.fPoSNoRetargeting = fPoSNoRetargeting;
+        fDefaultConsistencyChecks = false;
+        fRequireStandard = false;
+        fMineBlocksOnDemand = false;
+        m_is_test_chain = true;
+	consensus.nLastPOWBlock = nLastPOWBlock ;
+	consensus.nLastBigReward = nLastBigReward;
+	consensus.nMPoSRewardRecipients = nMPoSRewardRecipients;
+	consensus.nFirstMPoSBlock = consensus.nLastPOWBlock + consensus.nMPoSRewardRecipients + COINBASE_MATURITY;
+	consensus.nLastMPoSBlock = nLastMPoSBlock;
+	consensus.nFixUTXOCacheHFHeight = nFixUTXOCacheHFHeight;
+	consensus.nEnableHeaderSignatureHeight = nEnableHeaderSignatureHeight;
+	consensus.nCheckpointSpan = COINBASE_MATURITY;
+	consensus.delegationsAddress = uint160(ParseHex("0000000000000000000000000000000000000086")); // Delegations contract for offline staking
         consensus.nRuleChangeActivationThreshold = nRuleChangeActivationThreshold; // 75% for testchains
         consensus.nMinerConfirmationWindow = nMinerConfirmationWindow; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = bit;
@@ -251,10 +264,8 @@ public:
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x"); // cico
-
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x"); 
-
         pchMessageStart[0] = 0x33;
         pchMessageStart[1] = 0x44;
         pchMessageStart[2] = 0x55;
@@ -281,37 +292,8 @@ public:
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
 
         bech32_hrp = "tc";
-
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
 
-        fDefaultConsistencyChecks = false;
-        fRequireStandard = false;
-        fMineBlocksOnDemand = false;
-        m_is_test_chain = true;
-
-
-        checkpointData = {
-            {
-                {0, uint256S("000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c")},
-            }
-        };
-
-        chainTxData = ChainTxData{
-            // Data as of block babfd02d9dd271a12a2fd1b8ba95a0c73aca9a0b25889d3340a7ca3fb406a2cf (height 496333)
-            1504695029,
-            0,
-            0
-        };
-
-	consensus.nLastPOWBlock = nLastPOWBlock ;
-	consensus.nLastBigReward = nLastBigReward;
-	consensus.nMPoSRewardRecipients = nMPoSRewardRecipients;
-	consensus.nFirstMPoSBlock = consensus.nLastPOWBlock + consensus.nMPoSRewardRecipients + COINBASE_MATURITY;
-	consensus.nLastMPoSBlock = nLastMPoSBlock;
-	consensus.nFixUTXOCacheHFHeight = nFixUTXOCacheHFHeight;
-	consensus.nEnableHeaderSignatureHeight = nEnableHeaderSignatureHeight;
-	consensus.nCheckpointSpan = COINBASE_MATURITY;
-	consensus.delegationsAddress = uint160(ParseHex("0000000000000000000000000000000000000086")); // Delegations contract for offline staking
     }
 };
 
