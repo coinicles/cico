@@ -4,7 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <chainparams.h>
-
+#include<stdio.h>
 #include <chainparamsseeds.h>
 #include <consensus/merkle.h>
 #include <consensus/consensus.h>
@@ -23,35 +23,35 @@
 #include <libdevcore/SHA3.h>
 #include <libdevcore/RLP.h>
 #include "arith_uint256.h"
-#define SubsidyHalvingInterval 985500
-#define BIP34Height  0
-#define BIP16Exception uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c")
-#define  BIP34Hash uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c")
-#define BIP16Exception uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c")
-#define powLimit uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
-#define posLimit uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
-#define QIP9PosLimit uint256S("0000000000001fffffffffffffffffffffffffffffffffffffffffffffffffff")
-#define BIP65Height 0
-#define BIP66Height 0
-#define CSVHeight 6048
-#define SegwitHeight 6048
-#define MinBIP9WarningHeight 8064
-#define QIP5Height 6666
-#define QIP6Height 6666
-#define QIP7Height 6666
-#define QIP9Height 6666
-#define nOfflineStakeHeight 150000
-#define nPowTargetTimespan 960
-#define nPowTargetTimespanV2 4000
-#define nPowTargetSpacing 128
-#define fPowAllowMinDifficultyBlocks false
-#define fPowNoRetargeting true
-#define fPoSNoRetargeting false
-#define nRuleChangeActivationThreshold 1916
-#define nMinerConfirmationWindow 2016
-#define nStartTime 1199145601
-#define nTimeout 1230767999
-#define bit 28
+static const uint64_t nSubsidyHalvingInterval = 985500;
+static const uint64_t BIP34Height =  0;
+static const uint32_t BIP65Height = 0;
+static const uint32_t BIP66Height = 0;
+static const uint32_t CSVHeight = 6048;
+static const uint32_t SegwitHeight = 6048;
+static const uint32_t MinBIP9WarningHeight = 8064;
+static const uint32_t QIP5Height = 6666;
+static const uint32_t QIP6Height = 6666;
+static const uint32_t QIP7Height = 6666;
+static const uint32_t QIP9Height = 6666;
+static const uint64_t nOfflineStakeHeight = 150000;
+static const uint32_t nPowTargetTimespan = 960;
+static const uint32_t nPowTargetTimespanV2 = 4000;
+static const uint32_t nPowTargetSpacing = 128;
+static const uint32_t fPowAllowMinDifficultyBlocks = false;
+static const uint32_t fPowNoRetargeting = true;
+static const uint32_t fPoSNoRetargeting = false;
+static const uint32_t nRuleChangeActivationThreshold = 1916;
+static const uint32_t nMinerConfirmationWindow = 2016;
+static const uint32_t nStartTime = 1199145601;
+static const uint32_t nTimeout = 1230767999;
+static const uint32_t bit = 28;
+static const uint32_t nLastPOWBlock = 5000;
+static const uint32_t nLastBigReward = 5000;
+static const uint32_t nMPoSRewardRecipients = 10;
+static const uint64_t nLastMPoSBlock = 679999;
+static const uint32_t nFixUTXOCacheHFHeight = 7000;
+static const uint32_t nEnableHeaderSignatureHeight = 7000;
 /////////////////////////////////////////////////
 
 
@@ -119,9 +119,9 @@ public:
         };
         strNetworkID = "main";
         consensus.nSubsidyHalvingInterval = nSubsidyHalvingInterval; // cico halving every 4 years
-        consensus.BIP16Exception = BIP16Exception;
+        consensus.BIP16Exception = uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c");
         consensus.BIP34Height = BIP34Height;
-        consensus.BIP34Hash = BIP34Hash;
+        consensus.BIP34Hash = uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c");
         consensus.BIP65Height = BIP65Height; // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
         consensus.BIP66Height = BIP66Height; // 00000000000000000379eaa19dce8c9b722d46ae6a57c2f1a988119488b50931
         consensus.CSVHeight =   CSVHeight; // 000000000000000004a1b34462cb8aeebd5799177f7a29cf28f2d1961716b5b5
@@ -132,9 +132,9 @@ public:
         consensus.QIP7Height = QIP7Height;
         consensus.QIP9Height = QIP9Height;
         consensus.nOfflineStakeHeight = nOfflineStakeHeight;
-        consensus.powLimit = powLimit;
-        consensus.posLimit = posLimit;
-        consensus.QIP9PosLimit = QIP9PosLimit; // The new POS-limit activated after QIP9
+        consensus.powLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.posLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.QIP9PosLimit = uint256S("0000000000001fffffffffffffffffffffffffffffffffffffffffffffffffff"); // The new POS-limit activated after QIP9
         consensus.nPowTargetTimespan = nPowTargetTimespan; // 16 minutes
         consensus.nPowTargetTimespanV2 = nPowTargetTimespanV2;
         consensus.nPowTargetSpacing = nPowTargetSpacing;
@@ -146,10 +146,8 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = bit;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = nStartTime; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = nTimeout; // December 31, 2008
-
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0"); // cico
-
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x");
 
@@ -203,17 +201,13 @@ public:
             0 // * estimated number of transactions per second after that timestamp
         };
 
-        consensus.nLastPOWBlock = 5000;
-        consensus.nLastBigReward = 5000;
-        consensus.nMPoSRewardRecipients = 10;
-        consensus.nFirstMPoSBlock = consensus.nLastPOWBlock + 
-                                    consensus.nMPoSRewardRecipients + 
-                                    COINBASE_MATURITY;
-        consensus.nLastMPoSBlock = 679999;
-
-
-        consensus.nFixUTXOCacheHFHeight = 7000;
-        consensus.nEnableHeaderSignatureHeight = 7000;
+        consensus.nLastPOWBlock = nLastPOWBlock ;
+        consensus.nLastBigReward = nLastBigReward;
+        consensus.nMPoSRewardRecipients = nMPoSRewardRecipients;
+        consensus.nFirstMPoSBlock = consensus.nLastPOWBlock + consensus.nMPoSRewardRecipients + COINBASE_MATURITY;
+        consensus.nLastMPoSBlock = nLastMPoSBlock;
+        consensus.nFixUTXOCacheHFHeight = nFixUTXOCacheHFHeight;
+        consensus.nEnableHeaderSignatureHeight = nEnableHeaderSignatureHeight;
         consensus.nCheckpointSpan = COINBASE_MATURITY;
         consensus.delegationsAddress = uint160(ParseHex("0000000000000000000000000000000000000086")); // Delegations contract for offline staking
     }
@@ -227,9 +221,9 @@ public:
     CTestNetParams() {
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = nSubsidyHalvingInterval; // cico halving every 4 years
-        consensus.BIP16Exception = BIP16Exception;
+        consensus.BIP16Exception = uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c");
         consensus.BIP34Height = BIP34Height;
-        consensus.BIP34Hash = BIP34Hash;
+        consensus.BIP34Hash = uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c");
         consensus.BIP65Height = BIP65Height; // 00000000007f6655f22f98e72ed80d8b06dc761d5da09df0fa1dc4be4f861eb6
         consensus.BIP66Height = BIP66Height; // 000000002104c8c45e99a8853285a3b592602a3ccde2b832481da85e9e4ba182
         consensus.CSVHeight = CSVHeight; // 00000000025e930139bac5c6c31a403776da130831ab85be56578f3fa75369bb
@@ -240,9 +234,9 @@ public:
         consensus.QIP7Height = QIP7Height;
         consensus.QIP9Height = QIP9Height;
         consensus.nOfflineStakeHeight = nOfflineStakeHeight;
-        consensus.powLimit = powLimit;
-        consensus.posLimit = posLimit;
-        consensus.QIP9PosLimit = QIP9PosLimit; // The new POS-limit activated after QIP9
+        consensus.powLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.posLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.QIP9PosLimit = uint256S("0000000000001fffffffffffffffffffffffffffffffffffffffffffffffffff"); // The new POS-limit activated after QIP9
         consensus.nPowTargetTimespan = nPowTargetTimespan; // 16 minutes
         consensus.nPowTargetTimespanV2 = nPowTargetTimespanV2;
         consensus.nPowTargetSpacing = nPowTargetSpacing;
@@ -309,18 +303,15 @@ public:
             0
         };
 
-        consensus.nLastPOWBlock = 5000;
-        consensus.nLastBigReward = 5000;
-        consensus.nMPoSRewardRecipients = 10;
-        consensus.nFirstMPoSBlock = consensus.nLastPOWBlock + 
-                                    consensus.nMPoSRewardRecipients + 
-                                    COINBASE_MATURITY;
-        consensus.nLastMPoSBlock = 50000;
-
-        consensus.nFixUTXOCacheHFHeight = 6000;
-        consensus.nEnableHeaderSignatureHeight = 7000;
-        consensus.nCheckpointSpan = COINBASE_MATURITY;
-        consensus.delegationsAddress = uint160(ParseHex("0000000000000000000000000000000000000086")); // Delegations contract for offline staking
+	consensus.nLastPOWBlock = nLastPOWBlock ;
+	consensus.nLastBigReward = nLastBigReward;
+	consensus.nMPoSRewardRecipients = nMPoSRewardRecipients;
+	consensus.nFirstMPoSBlock = consensus.nLastPOWBlock + consensus.nMPoSRewardRecipients + COINBASE_MATURITY;
+	consensus.nLastMPoSBlock = nLastMPoSBlock;
+	consensus.nFixUTXOCacheHFHeight = nFixUTXOCacheHFHeight;
+	consensus.nEnableHeaderSignatureHeight = nEnableHeaderSignatureHeight;
+	consensus.nCheckpointSpan = COINBASE_MATURITY;
+	consensus.delegationsAddress = uint160(ParseHex("0000000000000000000000000000000000000086")); // Delegations contract for offline staking
     }
 };
 
