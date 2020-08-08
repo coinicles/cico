@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=0.17.6
+Name=Cico Core
+Comment=Connect to the Cico P2P Network
+Exec=cico-qt %u
+Terminal=false
+Type=Application
+Icon=cico128
+MimeType=x-scheme-handler/cico;
+Categories=Network;
+StartupWMClass=Cico-qt
+Name[en_US]=cico-qt

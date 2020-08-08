@@ -1,0 +1,6 @@
+usr/local/bin/cico-qt usr/bin
+share/pixmaps/cico32.xpm usr/share/pixmaps
+share/pixmaps/cico16.xpm usr/share/pixmaps
+share/pixmaps/cico128.png usr/share/pixmaps
+debian/cico-qt.desktop usr/share/applications
+debian/cico-qt.protocol usr/share/kde4/services/
