@@ -23,7 +23,38 @@
 #include <libdevcore/SHA3.h>
 #include <libdevcore/RLP.h>
 #include "arith_uint256.h"
-/////////////////////////////////////////////
+#define SubsidyHalvingInterval 985500
+#define BIP34Height  0
+#define BIP16Exception uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c")
+#define  BIP34Hash uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c")
+#define BIP16Exception uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c")
+#define powLimit uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
+#define posLimit uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
+#define QIP9PosLimit uint256S("0000000000001fffffffffffffffffffffffffffffffffffffffffffffffffff")
+#define BIP65Height 0
+#define BIP66Height 0
+#define CSVHeight 6048
+#define SegwitHeight 6048
+#define MinBIP9WarningHeight 8064
+#define QIP5Height 6666
+#define QIP6Height 6666
+#define QIP7Height 6666
+#define QIP9Height 6666
+#define nOfflineStakeHeight 150000
+#define nPowTargetTimespan 960
+#define nPowTargetTimespanV2 4000
+#define nPowTargetSpacing 128
+#define fPowAllowMinDifficultyBlocks false
+#define fPowNoRetargeting true
+#define fPoSNoRetargeting false
+#define nRuleChangeActivationThreshold 1916
+#define nMinerConfirmationWindow 2016
+#define nStartTime 1199145601
+#define nTimeout 1230767999
+#define bit 28
+/////////////////////////////////////////////////
+
+
 
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
@@ -72,35 +103,49 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
 class CMainParams : public CChainParams {
 public:
     CMainParams() {
+        //////////////////////////////////CHECKPOINTS///////////////////////////
+        checkpointData = {
+            {
+            { 0, uint256S("000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c")},
+            }
+        };
+        /////////////////////////////////////////////////////////////////////////
+                  chainTxData = ChainTxData{
+            // Data as of block 5c0215809068d3e8520997febc84ca578b4ddf3f8917a86b6c7f5e1deecb5c32 (height 499049)
+            1504695029, // * UNIX timestamp of last known number of transactions
+            0, // * total number of transactions between genesis and that timestamp
+            //   (the tx=... number in the SetBestChain debug.log lines)
+            0 // * estimated number of transactions per second after that timestamp
+        };
         strNetworkID = "main";
-        consensus.nSubsidyHalvingInterval = 985500; // cico halving every 4 years
-        consensus.BIP16Exception = uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c");
-        consensus.BIP34Height = 0;
-        consensus.BIP34Hash = uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c");
-        consensus.BIP65Height = 0; // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
-        consensus.BIP66Height = 0; // 00000000000000000379eaa19dce8c9b722d46ae6a57c2f1a988119488b50931
-        consensus.CSVHeight = 6048; // 000000000000000004a1b34462cb8aeebd5799177f7a29cf28f2d1961716b5b5
-        consensus.SegwitHeight = 6048; // 0000000000000000001c8018d9cb3b742ef25114f27563e3fc4a1902167f9893
-        consensus.MinBIP9WarningHeight = 8064; // segwit activation height + miner confirmation window
-        consensus.QIP5Height = 6666;
-        consensus.QIP6Height = 6666;
-        consensus.QIP7Height = 6666;
-        consensus.QIP9Height = 6666;
-        consensus.nOfflineStakeHeight = 150000;
-        consensus.powLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.posLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.QIP9PosLimit = uint256S("0000000000001fffffffffffffffffffffffffffffffffffffffffffffffffff"); // The new POS-limit activated after QIP9
-        consensus.nPowTargetTimespan = 16 * 60; // 16 minutes
-        consensus.nPowTargetTimespanV2 = 4000;
-        consensus.nPowTargetSpacing = 2 * 64;
-        consensus.fPowAllowMinDifficultyBlocks = false;
-        consensus.fPowNoRetargeting = true;
-        consensus.fPoSNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
-        consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
+        consensus.nSubsidyHalvingInterval = nSubsidyHalvingInterval; // cico halving every 4 years
+        consensus.BIP16Exception = BIP16Exception;
+        consensus.BIP34Height = BIP34Height;
+        consensus.BIP34Hash = BIP34Hash;
+        consensus.BIP65Height = BIP65Height; // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
+        consensus.BIP66Height = BIP66Height; // 00000000000000000379eaa19dce8c9b722d46ae6a57c2f1a988119488b50931
+        consensus.CSVHeight =   CSVHeight; // 000000000000000004a1b34462cb8aeebd5799177f7a29cf28f2d1961716b5b5
+        consensus.SegwitHeight = SegwitHeight ; // 0000000000000000001c8018d9cb3b742ef25114f27563e3fc4a1902167f9893
+        consensus.MinBIP9WarningHeight = MinBIP9WarningHeight; // segwit activation height + miner confirmation window
+        consensus.QIP5Height = QIP5Height;
+        consensus.QIP6Height = QIP6Height;
+        consensus.QIP7Height = QIP7Height;
+        consensus.QIP9Height = QIP9Height;
+        consensus.nOfflineStakeHeight = nOfflineStakeHeight;
+        consensus.powLimit = powLimit;
+        consensus.posLimit = posLimit;
+        consensus.QIP9PosLimit = QIP9PosLimit; // The new POS-limit activated after QIP9
+        consensus.nPowTargetTimespan = nPowTargetTimespan; // 16 minutes
+        consensus.nPowTargetTimespanV2 = nPowTargetTimespanV2;
+        consensus.nPowTargetSpacing = nPowTargetSpacing;
+        consensus.fPowAllowMinDifficultyBlocks = fPowAllowMinDifficultyBlocks;
+        consensus.fPowNoRetargeting = fPowNoRetargeting;
+        consensus.fPoSNoRetargeting = fPoSNoRetargeting;
+        consensus.nRuleChangeActivationThreshold = nRuleChangeActivationThreshold; // 95% of 2016
+        consensus.nMinerConfirmationWindow = nMinerConfirmationWindow; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = bit;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = nStartTime; // January 1, 2008
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = nTimeout; // December 31, 2008
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0"); // cico
@@ -150,12 +195,6 @@ public:
         fMineBlocksOnDemand = false;
         m_is_test_chain = false;
 
-        checkpointData = {
-            {
-                { 0, uint256S("000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c")},
-            }
-        };
-
         chainTxData = ChainTxData{
             // Data as of block 5c0215809068d3e8520997febc84ca578b4ddf3f8917a86b6c7f5e1deecb5c32 (height 499049)
             1504695029, // * UNIX timestamp of last known number of transactions
@@ -187,34 +226,34 @@ class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
         strNetworkID = "test";
-        consensus.nSubsidyHalvingInterval = 985500; // cico halving every 4 years
-        consensus.BIP16Exception = uint256S("0x0000e803ee215c0684ca0d2f9220594d3f828617972aad66feb2ba51f5e14222");
-        consensus.BIP34Height = 0;
-        consensus.BIP34Hash = uint256S("0x0000e803ee215c0684ca0d2f9220594d3f828617972aad66feb2ba51f5e14222");
-        consensus.BIP65Height = 0; // 00000000007f6655f22f98e72ed80d8b06dc761d5da09df0fa1dc4be4f861eb6
-        consensus.BIP66Height = 0; // 000000002104c8c45e99a8853285a3b592602a3ccde2b832481da85e9e4ba182
-        consensus.CSVHeight = 6048; // 00000000025e930139bac5c6c31a403776da130831ab85be56578f3fa75369bb
-        consensus.SegwitHeight = 6048; // 00000000002b980fcd729daaa248fd9316a5200e9b367f4ff2c42453e84201ca
-        consensus.MinBIP9WarningHeight = 6666; // segwit activation height + miner confirmation window
-        consensus.QIP5Height = 6666;
-        consensus.QIP6Height = 6666;
-        consensus.QIP7Height = 6666;
-        consensus.QIP9Height = 6666;
-        consensus.nOfflineStakeHeight = 7000;
-        consensus.powLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.posLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.QIP9PosLimit = uint256S("0000000000001fffffffffffffffffffffffffffffffffffffffffffffffffff"); // The new POS-limit activated after QIP9
-        consensus.nPowTargetTimespan = 16 * 60; // 16 minutes
-        consensus.nPowTargetTimespanV2 = 4000;
-        consensus.nPowTargetSpacing = 2 * 64;
-        consensus.fPowAllowMinDifficultyBlocks = false;
-        consensus.fPowNoRetargeting = true;
-        consensus.fPoSNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
-        consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
+        consensus.nSubsidyHalvingInterval = nSubsidyHalvingInterval; // cico halving every 4 years
+        consensus.BIP16Exception = BIP16Exception;
+        consensus.BIP34Height = BIP34Height;
+        consensus.BIP34Hash = BIP34Hash;
+        consensus.BIP65Height = BIP65Height; // 00000000007f6655f22f98e72ed80d8b06dc761d5da09df0fa1dc4be4f861eb6
+        consensus.BIP66Height = BIP66Height; // 000000002104c8c45e99a8853285a3b592602a3ccde2b832481da85e9e4ba182
+        consensus.CSVHeight = CSVHeight; // 00000000025e930139bac5c6c31a403776da130831ab85be56578f3fa75369bb
+        consensus.SegwitHeight = SegwitHeight; // 00000000002b980fcd729daaa248fd9316a5200e9b367f4ff2c42453e84201ca
+        consensus.MinBIP9WarningHeight = MinBIP9WarningHeight; // segwit activation height + miner confirmation window
+        consensus.QIP5Height = QIP5Height;
+        consensus.QIP6Height = QIP6Height;
+        consensus.QIP7Height = QIP7Height;
+        consensus.QIP9Height = QIP9Height;
+        consensus.nOfflineStakeHeight = nOfflineStakeHeight;
+        consensus.powLimit = powLimit;
+        consensus.posLimit = posLimit;
+        consensus.QIP9PosLimit = QIP9PosLimit; // The new POS-limit activated after QIP9
+        consensus.nPowTargetTimespan = nPowTargetTimespan; // 16 minutes
+        consensus.nPowTargetTimespanV2 = nPowTargetTimespanV2;
+        consensus.nPowTargetSpacing = nPowTargetSpacing;
+        consensus.fPowAllowMinDifficultyBlocks = fPowAllowMinDifficultyBlocks;
+        consensus.fPowNoRetargeting = fPowNoRetargeting;
+        consensus.fPoSNoRetargeting = fPoSNoRetargeting;
+        consensus.nRuleChangeActivationThreshold = nRuleChangeActivationThreshold; // 75% for testchains
+        consensus.nMinerConfirmationWindow = nMinerConfirmationWindow; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = bit;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = nStartTime; // January 1, 2008
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = nTimeout; // December 31, 2008
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x"); // cico
@@ -231,9 +270,9 @@ public:
         m_assumed_blockchain_size = 2;
         m_assumed_chain_state_size = 1;
 
-        genesis = CreateGenesisBlock(1504695029, 7349697, 0x1f00ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1504695029, 8026361, 0x1f00ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0000e803ee215c0684ca0d2f9220594d3f828617972aad66feb2ba51f5e14222"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c"));
         assert(genesis.hashMerkleRoot == uint256S("0xed34050eb5909ee535fcb07af292ea55f3d2f291187617b44d3282231405b96d"));
 
         vFixedSeeds.clear();
@@ -259,7 +298,7 @@ public:
 
         checkpointData = {
             {
-                {0, uint256S("0000e803ee215c0684ca0d2f9220594d3f828617972aad66feb2ba51f5e14222")},
+                {0, uint256S("000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c")},
             }
         };
 
@@ -328,8 +367,8 @@ public:
         consensus.defaultAssumeValid = uint256S("0x00");
 
         pchMessageStart[0] = 0xfd;
-        pchMessageStart[1] = 0xdd;
-        pchMessageStart[2] = 0xc6;
+        pchMessageStart[1] = 0x55;
+        pchMessageStart[2] = 0x44;
         pchMessageStart[3] = 0xe1;
         nDefaultPort = 23888;
         nPruneAfterHeight = 1000;

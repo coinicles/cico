@@ -407,12 +407,12 @@
         <translation type="unfinished">查看交易历史</translation>
     </message>
     <message>
-        <source>&amp;QRC Tokens</source>
-        <translation type="unfinished">QRCtoken</translation>
+        <source>&amp;CICORC Tokens</source>
+        <translation type="unfinished">CICORCtoken</translation>
     </message>
     <message>
-        <source>QRC Tokens (send, receive or add Tokens in list)</source>
-        <translation type="unfinished">QRCtoken（在列表内发送、接收或添加token）</translation>
+        <source>CICORC Tokens (send, receive or add Tokens in list)</source>
+        <translation type="unfinished">CICORCtoken（在列表内发送、接收或添加token）</translation>
     </message>
     <message>
         <source>E&amp;xit</source>
@@ -2354,7 +2354,7 @@ Please make sure to keep an updated antivirus and operating system. We can not r
     </message>
 </context>
 <context>
-    <name>QRCToken</name>
+    <name>CICORCToken</name>
     <message>
         <source>Form</source>
         <translation type="unfinished">表单</translation>
