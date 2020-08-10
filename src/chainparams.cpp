@@ -104,25 +104,30 @@ public:
         checkpointData = {
             {
             { 0, uint256S("000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c")},
+            { 10, uint256S("0000e08cdb6db5d368a87f90ddee9b40cf3c098d506a059b436fc02751b6acfb")},
+            { 50, uint256S("0000b2a80ebd5a44ffa23c2629e3bf47681fbaac6db3064f23f05d6849fd20bc")},
+            { 500, uint256S("00002b2c707b5ba1ef97d9710c0c7583ddc5301456af86dc67fadec006b4d45e")},
+            { 5000, uint256S("00006c745886c72e5d7862c147568db99de18fe0916afb7d536df178aeb63b01")},
+            { 5100, uint256S("fa60fb4f0661589ede3d56baa08f6f0f54a7e9befdaf855a47af9596837504a2")},
             }
         };
         /////////////////////////////////////////////////////////////////////////
                   chainTxData = ChainTxData{
             // Data as of block 5c0215809068d3e8520997febc84ca578b4ddf3f8917a86b6c7f5e1deecb5c32 (height 499049)
-            1504695029, // * UNIX timestamp of last known number of transactions
-            0, // * total number of transactions between genesis and that timestamp
+            1597049200, // * UNIX timestamp of last known number of transactions
+            6357, // * total number of transactions between genesis and that timestamp
             //   (the tx=... number in the SetBestChain debug.log lines)
-            0 // * estimated number of transactions per second after that timestamp
+            0.06962933745302348 // * estimated number of transactions per second after that timestamp
         };
         strNetworkID = "main";
         consensus.nSubsidyHalvingInterval = nSubsidyHalvingInterval; // cico halving every 4 years
         consensus.BIP16Exception = uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c");
         consensus.BIP34Height = BIP34Height;
         consensus.BIP34Hash = uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c");
-        consensus.BIP65Height = BIP65Height; // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
-        consensus.BIP66Height = BIP66Height; // 00000000000000000379eaa19dce8c9b722d46ae6a57c2f1a988119488b50931
-        consensus.CSVHeight =   CSVHeight; // 000000000000000004a1b34462cb8aeebd5799177f7a29cf28f2d1961716b5b5
-        consensus.SegwitHeight = SegwitHeight ; // 0000000000000000001c8018d9cb3b742ef25114f27563e3fc4a1902167f9893
+        consensus.BIP65Height = BIP65Height;    //000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c
+        consensus.BIP66Height = BIP66Height;    //000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c 
+        consensus.CSVHeight =   CSVHeight;
+        consensus.SegwitHeight = SegwitHeight ;
         consensus.MinBIP9WarningHeight = MinBIP9WarningHeight; // segwit activation height + miner confirmation window
         consensus.QIP5Height = QIP5Height;
         consensus.QIP6Height = QIP6Height;
@@ -157,9 +162,9 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = nStartTime; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = nTimeout; // December 31, 2008
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x0"); // cico
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000004185197ea81f4b1b"); // cico
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x");
+        consensus.defaultAssumeValid = uint256S("0x7015a41fc1385a5729006954f34bdcddf705ae4576c658518d9691dbb9df754e");
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
