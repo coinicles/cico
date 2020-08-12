@@ -1,5 +1,18 @@
 ### Coinicles
 
+
+
+|   Spec.          | Value  | 
+| ------------ | ------------- | 
+| Ticker       |     CICO         |
+| Total supply |     100million   |
+| P2P          |     38880         | 
+| RPC          |     38890         | 
+| Stake Reward |     12.8          |
+
+
+[Explorer](https://explorer.coinicles.tech)
+
 # Building Cico Core
 
 ### Validate and Reproduce Binaries
