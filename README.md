@@ -1,6 +1,6 @@
 ### Coinicles
 
-
+#### Cico is an open sourced public blockchain platform, which combines the security of Bitcoin UTXO while enabling multiple virtual machines including EVM and the revolutionary x86 VM. Cico is now PoS based and boasts a Decentralized Governance Protocol (DGP) allowing specific blockchain settings to be modified by making use of cico smart contracts. For instance, the block size of CICO just like qtum can be increased without the need of a hard fork. With 
 
 |   Spec.          | Value  | 
 | ------------ | ------------- | 
@@ -9,6 +9,8 @@
 | P2P          |     38880         | 
 | RPC          |     38890         | 
 | Stake Reward |     12.8          |
+| Confirmation |     500 blocks    |
+| Staking Methods | Offline & Online |
 
 
 [Explorer](https://explorer.coinicles.tech)
